@@ -4,4 +4,9 @@
     <string name="tab_text_player">Player</string>
     <string name="tab_text_folder">Folder</string>
     <string name="tab_text_playlists">Playlists</string>
+    <string name="queuefragment_placeholder">QueueFragment</string>
+    <string name="playerfragment_placeholder">PlayerFragment</string>
+    <string name="folderfragment_placeholder">FolderFragment</string>
+    <string name="playlistsfragment_placeholder">Playlistsfragment</string>
+
 </resources>
