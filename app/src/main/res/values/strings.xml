@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Music Player</string>
+    <string name="tab_text_queue">Queue</string>
+    <string name="tab_text_player">Player</string>
+    <string name="tab_text_folder">Folder</string>
+    <string name="tab_text_playlists">Playlists</string>
+</resources>
