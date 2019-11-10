@@ -29,4 +29,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    // https://mvnrepository.com/artifact/javax.inject/javax.inject
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 }
