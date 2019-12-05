@@ -18,7 +18,7 @@ import de.elite.musicplayer.ui.main.PlaylistsFragment;
 import de.elite.musicplayer.ui.main.QueueFragment;
 import de.elite.musicplayer.ui.main.SectionsPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements QueueFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, FolderFragment.OnFragmentInteractionListener, PlaylistsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements QueueFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, FolderFragment.OnListFragmentInteractionListener, PlaylistsFragment.OnFragmentInteractionListener {
 
     private static final int READ_PERMISSION_REQUEST = 1;
     private static final int WRITE_PERMISSION_REQUEST = 2;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements QueueFragment.OnF
     }
 
     @Override
-    public void onFolderFragmentInteraction(Uri uri) {
+    public void onFolderFragmentInteraction(Song item) {
 
     }
 
