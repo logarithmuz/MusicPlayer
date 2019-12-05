@@ -20,10 +20,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_queue, R.string.tab_text_player, R.string.tab_text_folder, R.string.tab_text_playlists};
     private final Context mContext;
 
-    private QueueFragment queueFragment = new QueueFragment();
-    private PlayerFragment playerFragment = new PlayerFragment();
-    private FolderFragment folderFragment = new FolderFragment();
-    private PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+    private QueueFragment queueFragment = QueueFragment.newInstance();
+    private PlayerFragment playerFragment = PlayerFragment.newInstance();
+    private FolderFragment folderFragment = FolderFragment.newInstance(1);
+    private PlaylistsFragment playlistsFragment = PlaylistsFragment.newInstance();
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
