@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -12,13 +13,9 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import de.elite.musicplayer.ui.main.FolderFragment;
-import de.elite.musicplayer.ui.main.PlayerFragment;
-import de.elite.musicplayer.ui.main.PlaylistsFragment;
-import de.elite.musicplayer.ui.main.QueueFragment;
 import de.elite.musicplayer.ui.main.SectionsPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements QueueFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, FolderFragment.OnListFragmentInteractionListener, PlaylistsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final int READ_PERMISSION_REQUEST = 1;
     private static final int WRITE_PERMISSION_REQUEST = 2;
@@ -58,25 +55,5 @@ public class MainActivity extends AppCompatActivity implements QueueFragment.OnF
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSION_REQUEST);
             }
         }
-    }
-
-    @Override
-    public void onQueueFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onPlayerFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onFolderFragmentInteraction(Song item) {
-
-    }
-
-    @Override
-    public void onPlaylistFragmentInteraction(Uri uri) {
-
     }
 }
