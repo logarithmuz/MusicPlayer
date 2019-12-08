@@ -23,7 +23,7 @@ import de.elite.musicplayer.R;
 public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     @Inject
-    MusikPlayer musikPlayer = MusikPlayer.getInstance();
+    MusicPlayer musicPlayer = MusicPlayer.getInstance();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,22 +70,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onPlayPausePressed(View view) {
-        MusikPlayer.PlayerState playerState = musikPlayer.getPlayerState();
-        if (playerState == MusikPlayer.PlayerState.PAUSE)
-            Toast.makeText(getContext(),"Play pressed", Toast.LENGTH_SHORT).show();
-        if (playerState == MusikPlayer.PlayerState.PLAY)
-            Toast.makeText(getContext(), "Pause pressed", Toast.LENGTH_SHORT).show();
-        musikPlayer.playPause();
+        MusicPlayer.PlayerState playerState = musicPlayer.getPlayerState();
+        ImageView imageView = (ImageView) view;
+        if (playerState == MusicPlayer.PlayerState.PAUSE) {
+            imageView.setImageResource(R.drawable.ic_pause);
+        }
+        if (playerState == MusicPlayer.PlayerState.PLAY) {
+            imageView.setImageResource(R.drawable.ic_play);
+        }
+        musicPlayer.playPause();
     }
 
     public void onPreviousPressed(View view) {
-        Toast.makeText(getContext(),"Previous pressed", Toast.LENGTH_SHORT).show();
-        System.out.println("Previous pressed");
+        Toast.makeText(getContext(), "Previous pressed", Toast.LENGTH_SHORT).show();
     }
 
     public void onNextPressed(View view) {
-        Toast.makeText(getContext(),"Next pressed", Toast.LENGTH_SHORT).show();
-        System.out.println("Next pressed");
+        Toast.makeText(getContext(), "Next pressed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
