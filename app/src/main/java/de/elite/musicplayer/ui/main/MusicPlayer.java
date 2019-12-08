@@ -1,28 +1,26 @@
 package de.elite.musicplayer.ui.main;
 
-public class MusikPlayer {
+public class MusicPlayer {
 
-    private static MusikPlayer instance;
+    private static MusicPlayer instance;
 
     private PlayerState playerState = PlayerState.PAUSE;
 
-    private MusikPlayer() {
+    private MusicPlayer() {
     }
 
-    public static MusikPlayer getInstance() {
-        if (MusikPlayer.instance == null) {
-            MusikPlayer.instance = new MusikPlayer();
+    public static MusicPlayer getInstance() {
+        if (MusicPlayer.instance == null) {
+            MusicPlayer.instance = new MusicPlayer();
         }
-        return MusikPlayer.instance;
+        return MusicPlayer.instance;
     }
 
     public void playPause() {
         if (this.playerState == PlayerState.PAUSE) {
             this.playerState = PlayerState.PLAY;
-            System.out.println("Musikplayer.play()");
         } else if (this.playerState == PlayerState.PLAY) {
             this.playerState = PlayerState.PAUSE;
-            System.out.println("Musikplayer.pause()");
         }
     }
 

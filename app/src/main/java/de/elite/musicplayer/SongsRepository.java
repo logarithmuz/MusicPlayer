@@ -26,7 +26,6 @@ public class SongsRepository {
     }
 
     public List<Song> getAllSongs() {
-        System.out.println("getAllSongs()");
         List<Song> songList = new ArrayList();
         Context context = MusicPlayerApplication.get();
         ContentResolver contentResolver = context.getContentResolver();
