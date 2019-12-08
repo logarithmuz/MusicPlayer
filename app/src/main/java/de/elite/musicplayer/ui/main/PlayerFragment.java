@@ -1,7 +1,6 @@
 package de.elite.musicplayer.ui.main;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,20 +8,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import javax.inject.Inject;
 
 import de.elite.musicplayer.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PlayerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link PlayerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlayerFragment extends Fragment {
+public class PlayerFragment extends Fragment implements View.OnClickListener {
 
-    private OnFragmentInteractionListener mListener;
+    @Inject
+    MusikPlayer musikPlayer = MusikPlayer.getInstance();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -35,8 +36,6 @@ public class PlayerFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment PlayerFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -59,46 +58,61 @@ public class PlayerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_player, container, false);
+        View v = inflater.inflate(R.layout.fragment_player, container, false);
+
+        ImageView play = (ImageView) v.findViewById(R.id.btn_play_pause);
+        play.setOnClickListener(this);
+        ImageView next = (ImageView) v.findViewById(R.id.btn_next);
+        next.setOnClickListener(this);
+        ImageView previous = (ImageView) v.findViewById(R.id.btn_previous);
+        previous.setOnClickListener(this);
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onPlayerFragmentInteraction(uri);
-        }
+    public void onPlayPausePressed(View view) {
+        MusikPlayer.PlayerState playerState = musikPlayer.getPlayerState();
+        if (playerState == MusikPlayer.PlayerState.PAUSE)
+            Toast.makeText(getContext(),"Play pressed", Toast.LENGTH_SHORT).show();
+        if (playerState == MusikPlayer.PlayerState.PLAY)
+            Toast.makeText(getContext(), "Pause pressed", Toast.LENGTH_SHORT).show();
+        musikPlayer.playPause();
+    }
+
+    public void onPreviousPressed(View view) {
+        Toast.makeText(getContext(),"Previous pressed", Toast.LENGTH_SHORT).show();
+        System.out.println("Previous pressed");
+    }
+
+    public void onNextPressed(View view) {
+        Toast.makeText(getContext(),"Next pressed", Toast.LENGTH_SHORT).show();
+        System.out.println("Next pressed");
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onPlayerFragmentInteraction(Uri uri);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_play_pause:
+                onPlayPausePressed(v);
+                break;
+            case R.id.btn_next:
+                onNextPressed(v);
+                break;
+            case R.id.btn_previous:
+                onPreviousPressed(v);
+                break;
+            default:
+                throw new UnsupportedOperationException("No onClick action defined for " + v.getId());
+        }
+
     }
 }

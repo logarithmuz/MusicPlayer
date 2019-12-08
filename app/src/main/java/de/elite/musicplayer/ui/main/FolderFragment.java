@@ -26,9 +26,6 @@ import de.elite.musicplayer.SongsRepository;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnListFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link FolderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -36,11 +33,9 @@ public class FolderFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount;
-    private OnListFragmentInteractionListener mListener;
 
     @Inject
-    private
-    SongsRepository songsRepository = SongsRepository.getInstance();
+    private SongsRepository songsRepository = SongsRepository.getInstance();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,12 +78,17 @@ public class FolderFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             List<Song> songList = songsRepository.getAllSongs();
 
-            if(mColumnCount <= 1) {
+            if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(songList, mListener));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Song item) {
+
+                }
+            }));
         }
 
         return view;
@@ -99,27 +99,14 @@ public class FolderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void onButtonPressed(Song item) {
-        if (mListener != null) {
-            mListener.onFolderFragmentInteraction(item);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -133,6 +120,6 @@ public class FolderFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onFolderFragmentInteraction(Song item);
+        void onFragmentInteraction(Song item);
     }
 }
