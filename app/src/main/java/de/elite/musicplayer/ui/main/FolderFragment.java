@@ -37,6 +37,9 @@ public class FolderFragment extends Fragment {
     @Inject
     private SongsRepository songsRepository = SongsRepository.getInstance();
 
+    @Inject
+    private MusicPlayer musicPlayer = MusicPlayer.getInstance();
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -85,8 +88,8 @@ public class FolderFragment extends Fragment {
             }
             recyclerView.setAdapter(new MyItemRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
                 @Override
-                public void onFragmentInteraction(Song item) {
-
+                public void onFragmentInteraction(Song song) {
+                    musicPlayer.playSong(getContext(), song);
                 }
             }));
         }
