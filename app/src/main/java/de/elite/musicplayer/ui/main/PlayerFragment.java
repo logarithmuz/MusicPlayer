@@ -60,11 +60,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_player, container, false);
 
-        ImageView play = (ImageView) v.findViewById(R.id.btn_play_pause);
+        ImageView play = v.findViewById(R.id.btn_play_pause);
         play.setOnClickListener(this);
-        ImageView next = (ImageView) v.findViewById(R.id.btn_next);
+        ImageView next = v.findViewById(R.id.btn_next);
         next.setOnClickListener(this);
-        ImageView previous = (ImageView) v.findViewById(R.id.btn_previous);
+        ImageView previous = v.findViewById(R.id.btn_previous);
         previous.setOnClickListener(this);
         return v;
     }
@@ -114,6 +114,5 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             default:
                 throw new UnsupportedOperationException("No onClick action defined for " + v.getId());
         }
-
     }
 }
