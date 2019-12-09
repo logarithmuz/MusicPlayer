@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import de.elite.musicplayer.Song;
 
-public class MusicPlayer {
+public class MusicPlayer implements MediaPlayer.OnPreparedListener {
 
     private static MusicPlayer instance;
 
@@ -37,10 +37,14 @@ public class MusicPlayer {
 
     public void playSong(Context context, Song song) {
         try {
+            if (mediaPlayer.isPlaying()){
+                mediaPlayer.stop();
+            }
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(context, song.getUri());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.prepareAsync(); // prepare async to not block main thread
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,6 +52,11 @@ public class MusicPlayer {
 
     public PlayerState getPlayerState() {
         return this.playerState;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
     }
 
     enum PlayerState {
