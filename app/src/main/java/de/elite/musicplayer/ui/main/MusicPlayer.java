@@ -37,11 +37,9 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
 
     public void playSong(Context context, Song song) {
         try {
-            if (mediaPlayer.isPlaying()){
-                mediaPlayer.stop();
-            }
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.stop();
             mediaPlayer.reset();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(context, song.getUri());
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync(); // prepare async to not block main thread
@@ -57,6 +55,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        this.playerState = PlayerState.PLAY;
     }
 
     enum PlayerState {
