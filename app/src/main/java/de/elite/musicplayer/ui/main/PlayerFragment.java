@@ -1,6 +1,11 @@
 package de.elite.musicplayer.ui.main;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,11 +15,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
+import de.elite.musicplayer.Constant;
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.Song;
 import de.elite.musicplayer.ui.main.MusicPlayer.PlayerState;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -88,6 +99,33 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onComplete: called");
             }
         });
+
+        Observable<Song> currentSongObservable = musicPlayer.getCurrentSong()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        currentSongObservable.subscribe(new Observer<Song>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "onSubscribe: called");
+            }
+
+            @Override
+            public void onNext(Song song) {
+                Log.d(TAG, "onNext: " + song.toString());
+                refreshSongInfo(song);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: ", e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "onComplete: called");
+            }
+        });
     }
 
     @Override
@@ -123,6 +161,28 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         }
         if (playerState == PlayerState.PAUSE) {
             imageView.setImageResource(R.drawable.ic_play);
+        }
+    }
+
+    private void refreshSongInfo(Song song) {
+        try {
+        ImageView albumCover = getActivity().findViewById(R.id.album_cover);
+        TextView tfTitle = getActivity().findViewById(R.id.tf_title);
+        TextView tfArtist = getActivity().findViewById(R.id.tf_artist);
+        TextView tfAlbum = getActivity().findViewById(R.id.tf_album);
+
+        Uri uri = ContentUris.withAppendedId(Constant.sArtworkUri, song.getAlbumID());
+        ContentResolver res = getContext().getContentResolver();
+        InputStream in = res.openInputStream(uri);
+        Bitmap artwork = BitmapFactory.decodeStream(in);
+
+        albumCover.setImageBitmap(artwork);
+        tfTitle.setText(song.getTitle());
+        tfArtist.setText(song.getArtist());
+        tfAlbum.setText(song.getAlbum());
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
