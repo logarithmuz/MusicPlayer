@@ -66,6 +66,14 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
         return currentSongSubject;
     }
 
+    public void seekToPosiontInSong(int millis) {
+        mediaPlayer.seekTo(millis);
+    }
+
+    public int getCurrentPositionInSong() {
+        return mediaPlayer.getCurrentPosition();
+    }
+
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
