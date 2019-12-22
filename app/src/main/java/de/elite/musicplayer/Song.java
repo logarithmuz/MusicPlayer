@@ -11,16 +11,18 @@ public class Song {
     private String artist;
     private String album;
     private int albumID;
+    private int duration;
     private String path;
     private Uri songUri;
 
 
-    public Song(int songId, String title, String artist, String album, int albumID, String path, Uri songUri) {
+    public Song(int songId, String title, String artist, String album, int albumID, int duration, String path, Uri songUri) {
         this.songId = songId;
         this.title = title;
         this.artist = artist;
         this.album = album;
         this.albumID = albumID;
+        this.duration = duration;
         this.path = path;
         this.songUri = songUri;
     }
@@ -45,6 +47,10 @@ public class Song {
 
     public int getAlbumID() {
         return albumID;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public Uri getUri() {

@@ -10,16 +10,20 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -164,26 +168,90 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void refreshSongInfo(Song song) {
+    private void refreshSongInfo(final Song song) {
         try {
-        ImageView albumCover = getActivity().findViewById(R.id.album_cover);
-        TextView tfTitle = getActivity().findViewById(R.id.tf_title);
-        TextView tfArtist = getActivity().findViewById(R.id.tf_artist);
-        TextView tfAlbum = getActivity().findViewById(R.id.tf_album);
+            ImageView albumCover = getActivity().findViewById(R.id.album_cover);
+            TextView tfTitle = getActivity().findViewById(R.id.tf_title);
+            TextView tfArtist = getActivity().findViewById(R.id.tf_artist);
+            TextView tfAlbum = getActivity().findViewById(R.id.tf_album);
+            TextView tfSeekBarPosition = getActivity().findViewById(R.id.tf_seekbar_position);
+            TextView tfSeekBarDuration = getActivity().findViewById(R.id.tf_seekbar_duration);
+            SeekBar seekBar = getActivity().findViewById(R.id.seekBar);
 
-        Uri uri = ContentUris.withAppendedId(Constant.sArtworkUri, song.getAlbumID());
-        ContentResolver res = getContext().getContentResolver();
-        InputStream in = res.openInputStream(uri);
-        Bitmap artwork = BitmapFactory.decodeStream(in);
+            Uri uri = ContentUris.withAppendedId(Constant.sArtworkUri, song.getAlbumID());
+            ContentResolver res = getContext().getContentResolver();
+            InputStream in = res.openInputStream(uri);
+            Bitmap artwork = BitmapFactory.decodeStream(in);
 
-        albumCover.setImageBitmap(artwork);
-        tfTitle.setText(song.getTitle());
-        tfArtist.setText(song.getArtist());
-        tfAlbum.setText(song.getAlbum());
+            albumCover.setImageBitmap(artwork);
+            tfTitle.setText(song.getTitle());
+            tfArtist.setText(song.getArtist());
+            tfAlbum.setText(song.getAlbum());
+            tfSeekBarPosition.setText("0:00");
+            tfSeekBarDuration.setText(formatTime(song.getDuration()));
+            seekBar.setMax(song.getDuration());
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser)
+                        musicPlayer.seekToPosiontInSong(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            Thread updateSeekBarThread = new Thread() {
+                @Override
+                public void run() {
+                    while (musicPlayer.getCurrentPositionInSong() < song.getDuration()) {
+                        refreshSeekBar(musicPlayer.getCurrentPositionInSong());
+                        refreshSeekBarSeconds(musicPlayer.getCurrentPositionInSong());
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            updateSeekBarThread.start();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private void refreshSeekBarSeconds(final int millis) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                TextView tf = getActivity().findViewById(R.id.tf_seekbar_position);
+                if (tf != null)
+                    tf.setText(formatTime(millis));
+            }
+        });
+    }
+
+    private void refreshSeekBar(int millis) {
+        SeekBar seekBar = getActivity().findViewById(R.id.seekBar);
+        if (seekBar != null)
+            seekBar.setProgress(millis);
+    }
+
+    private String formatTime(int millis) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(minutes);
+        String time = String.format("%d:%02d", minutes, seconds);
+        return time;
     }
 
     @Override
