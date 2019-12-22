@@ -35,16 +35,20 @@ public class SongsRepository {
         if (songCursor != null && songCursor.moveToFirst()) {
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+            int songAlbumID = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
             int songPath = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             do {
                 String title = songCursor.getString(songTitle);
                 String artist = songCursor.getString(songArtist);
+                String album = songCursor.getString(songAlbum);
+                int albumID = songCursor.getInt(songAlbumID);
                 String path = songCursor.getString(songPath);
                 Uri songUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         songCursor.getInt(songCursor.getColumnIndex(MediaStore.Audio.AudioColumns._ID)));
 
-                songList.add(new Song(songId, title, artist, path, songUri));
+                songList.add(new Song(songId, title, artist, album, albumID, path, songUri));
             } while (songCursor.moveToNext());
         }
         return songList;

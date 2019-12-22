@@ -14,12 +14,14 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
     private static MusicPlayer instance;
 
     private PlayerState playerState = PlayerState.PAUSE;
-    private PublishSubject<PlayerState> playerStateSubject;
+    private PublishSubject<PlayerState> playerStateSubject = PublishSubject.create();
+
+    private Song currentSong;
+    private PublishSubject<Song> currentSongSubject = PublishSubject.create();
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
     private MusicPlayer() {
-        playerStateSubject = PublishSubject.create();
         playerStateSubject.onNext(playerState);
     }
 
@@ -49,6 +51,8 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
             mediaPlayer.setDataSource(context, song.getUri());
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync(); // prepare async to not block main thread
+            this.currentSong = song;
+            this.currentSongSubject.onNext(song);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,6 +60,10 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
 
     public PublishSubject<PlayerState> getPlayerState() {
         return playerStateSubject;
+    }
+
+    public PublishSubject<Song> getCurrentSong() {
+        return currentSongSubject;
     }
 
     @Override
