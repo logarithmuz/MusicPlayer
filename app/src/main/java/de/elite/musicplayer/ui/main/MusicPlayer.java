@@ -7,15 +7,20 @@ import android.media.MediaPlayer;
 import java.io.IOException;
 
 import de.elite.musicplayer.Song;
+import io.reactivex.subjects.PublishSubject;
 
 public class MusicPlayer implements MediaPlayer.OnPreparedListener {
 
     private static MusicPlayer instance;
 
     private PlayerState playerState = PlayerState.PAUSE;
+    private PublishSubject<PlayerState> playerStateSubject;
+
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
     private MusicPlayer() {
+        playerStateSubject = PublishSubject.create();
+        playerStateSubject.onNext(playerState);
     }
 
     public static MusicPlayer getInstance() {
@@ -33,6 +38,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
             mediaPlayer.pause();
             this.playerState = PlayerState.PAUSE;
         }
+        playerStateSubject.onNext(this.playerState);
     }
 
     public void playSong(Context context, Song song) {
@@ -48,14 +54,15 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
         }
     }
 
-    public PlayerState getPlayerState() {
-        return this.playerState;
+    public PublishSubject<PlayerState> getPlayerState() {
+        return playerStateSubject;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
         this.playerState = PlayerState.PLAY;
+        playerStateSubject.onNext(this.playerState);
     }
 
     enum PlayerState {

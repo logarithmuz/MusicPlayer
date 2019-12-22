@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,12 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.ui.main.MusicPlayer.PlayerState;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +31,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     @Inject
     MusicPlayer musicPlayer = MusicPlayer.getInstance();
+    private String TAG = "PlayerFragment";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,6 +61,33 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
 
         }
+
+        Observable<PlayerState> playerStateObservable = musicPlayer.getPlayerState()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        playerStateObservable.subscribe(new Observer<PlayerState>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "onSubscribe: called");
+            }
+
+            @Override
+            public void onNext(PlayerState playerState) {
+                Log.d(TAG, "onNext: " + playerState);
+                refreshPlayerState(playerState);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: ", e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "onComplete: called");
+            }
+        });
     }
 
     @Override
@@ -70,14 +105,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onPlayPausePressed(View view) {
-        MusicPlayer.PlayerState playerState = musicPlayer.getPlayerState();
-        ImageView imageView = (ImageView) view;
-        if (playerState == MusicPlayer.PlayerState.PAUSE) {
-            imageView.setImageResource(R.drawable.ic_pause);
-        }
-        if (playerState == MusicPlayer.PlayerState.PLAY) {
-            imageView.setImageResource(R.drawable.ic_play);
-        }
         musicPlayer.playPause();
     }
 
@@ -87,6 +114,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public void onNextPressed(View view) {
         Toast.makeText(getContext(), "Next pressed", Toast.LENGTH_SHORT).show();
+    }
+
+    private void refreshPlayerState(PlayerState playerState) {
+        ImageView imageView = (ImageView) getActivity().findViewById(R.id.btn_play_pause);
+        if (playerState == PlayerState.PLAY) {
+            imageView.setImageResource(R.drawable.ic_pause);
+        }
+        if (playerState == PlayerState.PAUSE) {
+            imageView.setImageResource(R.drawable.ic_play);
+        }
     }
 
     @Override
