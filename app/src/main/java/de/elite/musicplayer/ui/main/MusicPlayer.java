@@ -5,7 +5,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import java.io.IOException;
+import java.util.List;
 
+import de.elite.musicplayer.Queue;
 import de.elite.musicplayer.Song;
 import io.reactivex.subjects.PublishSubject;
 
@@ -16,13 +18,16 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
     private PlayerState playerState = PlayerState.PAUSE;
     private PublishSubject<PlayerState> playerStateSubject = PublishSubject.create();
 
-    private Song currentSong;
+    private Queue queue;
+    private PublishSubject<Queue> queueSubject = PublishSubject.create();
     private PublishSubject<Song> currentSongSubject = PublishSubject.create();
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
     private MusicPlayer() {
-        playerStateSubject.onNext(playerState);
+        this.playerStateSubject.onNext(playerState);
+        this.queue = new Queue();
+        this.queueSubject.onNext(queue);
     }
 
     public static MusicPlayer getInstance() {
@@ -45,25 +50,30 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
 
     public void playSong(Context context, Song song) {
         try {
+            this.queue.addSongToQueue(QueuePosition.AFTER_CURRENT_SONG, song);
+            this.queue.nextSong();
+            this.currentSongSubject.onNext(song);
             mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(context, song.getUri());
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync(); // prepare async to not block main thread
-            this.currentSong = song;
-            this.currentSongSubject.onNext(song);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public PublishSubject<PlayerState> getPlayerState() {
+    public PublishSubject<PlayerState> getPlayerStateSubject() {
         return playerStateSubject;
     }
 
-    public PublishSubject<Song> getCurrentSong() {
+    public PublishSubject<Song> getCurrentSongSubject() {
         return currentSongSubject;
+    }
+
+    public PublishSubject<Queue> getQueueSubject() {
+        return queueSubject;
     }
 
     public void seekToPosiontInSong(int millis) {
@@ -79,6 +89,10 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
         mp.start();
         this.playerState = PlayerState.PLAY;
         playerStateSubject.onNext(this.playerState);
+    }
+
+    public List<Song> getQueueSongList() {
+        return this.queue.getSongList();
     }
 
     enum PlayerState {

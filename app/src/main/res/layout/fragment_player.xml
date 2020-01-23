@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
-    
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/song_info"
         android:layout_width="0dp"

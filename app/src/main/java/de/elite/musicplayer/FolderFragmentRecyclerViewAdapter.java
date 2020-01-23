@@ -16,12 +16,12 @@ import java.util.List;
  * specified {@link FolderFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class FolderFragmentRecyclerViewAdapter extends RecyclerView.Adapter<FolderFragmentRecyclerViewAdapter.ViewHolder> {
 
     private final List<Song> mValues;
     private final FolderFragment.OnListFragmentInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<Song> songList, FolderFragment.OnListFragmentInteractionListener listener) {
+    public FolderFragmentRecyclerViewAdapter(List<Song> songList, FolderFragment.OnListFragmentInteractionListener listener) {
         mValues = songList;
         mListener = listener;
     }
@@ -29,7 +29,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.folder_fragment_item, parent, false);
         return new ViewHolder(view);
     }
 

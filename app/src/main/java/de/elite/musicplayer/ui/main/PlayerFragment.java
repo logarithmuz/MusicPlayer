@@ -77,7 +77,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
         }
 
-        Observable<PlayerState> playerStateObservable = musicPlayer.getPlayerState()
+        Observable<PlayerState> playerStateObservable = musicPlayer.getPlayerStateSubject()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -104,7 +104,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        Observable<Song> currentSongObservable = musicPlayer.getCurrentSong()
+        Observable<Song> currentSongObservable = musicPlayer.getCurrentSongSubject()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
