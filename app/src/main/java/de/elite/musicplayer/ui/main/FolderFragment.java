@@ -1,7 +1,6 @@
 package de.elite.musicplayer.ui.main;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import de.elite.musicplayer.MyItemRecyclerViewAdapter;
+import de.elite.musicplayer.FolderFragmentRecyclerViewAdapter;
 import de.elite.musicplayer.R;
 import de.elite.musicplayer.Song;
 import de.elite.musicplayer.SongsRepository;
@@ -86,7 +85,7 @@ public class FolderFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
+            recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
                 @Override
                 public void onFragmentInteraction(Song song) {
                     musicPlayer.playSong(getContext(), song);
