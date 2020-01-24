@@ -79,7 +79,7 @@ public class FolderFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            List<Song> songList = songsRepository.getAllSongs();
+            final List<Song> songList = songsRepository.getAllSongs();
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -89,7 +89,7 @@ public class FolderFragment extends Fragment {
             recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
                 @Override
                 public void onFragmentInteraction(Song song) {
-                    musicPlayer.playSong(getContext(), song);
+                    musicPlayer.createQueueFromSelectionAndPlay(getContext(), songList, songList.indexOf(song));
                 }
             }));
         }
