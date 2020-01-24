@@ -19,6 +19,11 @@ public class Queue {
         this.currentSong = 0;
     }
 
+    public Queue(List<Song> songList){
+        this.songList = songList;
+        this.currentSong = 0;
+    }
+
     public List<Song> getSongList() {
         return this.songList;
     }

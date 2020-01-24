@@ -103,13 +103,13 @@ public class QueueFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            List<Song> queueSongList = this.musicPlayer.getQueueSongList();
+            final List<Song> queueSongList = this.musicPlayer.getQueueSongList();
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new QueueFragmentRecyclerViewAdapter(queueSongList, new OnListFragmentInteractionListener() {
                 @Override
                 public void onFragmentInteraction(Song song) {
-                    musicPlayer.playSong(getContext(), song);
+                    musicPlayer.playSongAtPositionInQueue(getContext(), queueSongList.indexOf(song));
                 }
             }));
         }

@@ -152,11 +152,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onPreviousPressed(View view) {
-        Toast.makeText(getContext(), "Previous pressed", Toast.LENGTH_SHORT).show();
+        musicPlayer.previousSong(getContext());
     }
 
     public void onNextPressed(View view) {
-        Toast.makeText(getContext(), "Next pressed", Toast.LENGTH_SHORT).show();
+        musicPlayer.nextSong(getContext());
     }
 
     private void refreshPlayerState(PlayerState playerState) {
