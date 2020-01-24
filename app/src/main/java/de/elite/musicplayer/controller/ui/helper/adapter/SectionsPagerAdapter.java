@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.helper.adapter;
 
 import android.content.Context;
 
@@ -9,6 +9,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.controller.ui.main.fragments.FolderFragment;
+import de.elite.musicplayer.controller.ui.main.fragments.PlayerFragment;
+import de.elite.musicplayer.controller.ui.main.fragments.PlaylistsFragment;
+import de.elite.musicplayer.controller.ui.main.fragments.QueueFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

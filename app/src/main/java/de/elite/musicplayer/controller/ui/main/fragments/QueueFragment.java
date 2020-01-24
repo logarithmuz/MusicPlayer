@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.main.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,10 +16,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import de.elite.musicplayer.Queue;
-import de.elite.musicplayer.QueueFragmentRecyclerViewAdapter;
+import de.elite.musicplayer.model.Queue;
+import de.elite.musicplayer.controller.ui.helper.adapter.QueueFragmentRecyclerViewAdapter;
 import de.elite.musicplayer.R;
-import de.elite.musicplayer.Song;
+import de.elite.musicplayer.model.Song;
+import de.elite.musicplayer.model.MusicPlayer;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.Observable;

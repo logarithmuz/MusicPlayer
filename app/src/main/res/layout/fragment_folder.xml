@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:listitem="@layout/folder_fragment_item"
-    tools:context=".ui.main.FolderFragment"/>
+    tools:context=".controller.ui.main.fragments.FolderFragment"/>

@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.main.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,10 +18,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import de.elite.musicplayer.FolderFragmentRecyclerViewAdapter;
+import de.elite.musicplayer.controller.ui.helper.adapter.FolderFragmentRecyclerViewAdapter;
 import de.elite.musicplayer.R;
-import de.elite.musicplayer.Song;
-import de.elite.musicplayer.SongsRepository;
+import de.elite.musicplayer.model.Song;
+import de.elite.musicplayer.model.SongsRepository;
+import de.elite.musicplayer.model.MusicPlayer;
 
 /**
  * A simple {@link Fragment} subclass.

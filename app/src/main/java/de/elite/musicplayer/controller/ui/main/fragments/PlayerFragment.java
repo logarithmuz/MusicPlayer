@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.main.fragments;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -27,10 +27,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import de.elite.musicplayer.Constant;
+import de.elite.musicplayer.controller.Constant;
 import de.elite.musicplayer.R;
-import de.elite.musicplayer.Song;
-import de.elite.musicplayer.ui.main.MusicPlayer.PlayerState;
+import de.elite.musicplayer.model.Song;
+import de.elite.musicplayer.model.MusicPlayer;
+import de.elite.musicplayer.model.enums.PlayerState;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.Observable;

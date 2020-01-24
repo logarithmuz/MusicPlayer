@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.model.enums;
 
 public enum QueuePosition {
     BEFORE_CURRENT_SONG,
