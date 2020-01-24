@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.main.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.controller.ui.main.PageViewModel;
 
 /**
  * A placeholder fragment containing a simple view.

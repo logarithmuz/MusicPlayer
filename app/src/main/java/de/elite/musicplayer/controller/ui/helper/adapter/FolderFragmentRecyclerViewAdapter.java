@@ -1,4 +1,4 @@
-package de.elite.musicplayer;
+package de.elite.musicplayer.controller.ui.helper.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import de.elite.musicplayer.ui.main.FolderFragment;
+import de.elite.musicplayer.R;
+import de.elite.musicplayer.model.Song;
+import de.elite.musicplayer.controller.ui.main.fragments.FolderFragment;
 
 import java.util.List;
 

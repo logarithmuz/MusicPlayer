@@ -1,11 +1,11 @@
-package de.elite.musicplayer;
+package de.elite.musicplayer.model;
 
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.elite.musicplayer.ui.main.QueuePosition;
+import de.elite.musicplayer.model.enums.QueuePosition;
 
 
 public class Queue {

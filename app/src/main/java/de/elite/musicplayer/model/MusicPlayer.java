@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.model;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -7,8 +7,8 @@ import android.media.MediaPlayer;
 import java.io.IOException;
 import java.util.List;
 
-import de.elite.musicplayer.Queue;
-import de.elite.musicplayer.Song;
+import de.elite.musicplayer.model.enums.PlayerState;
+import de.elite.musicplayer.model.enums.QueuePosition;
 import io.reactivex.subjects.PublishSubject;
 
 public class MusicPlayer implements MediaPlayer.OnPreparedListener {
@@ -93,9 +93,5 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener {
 
     public List<Song> getQueueSongList() {
         return this.queue.getSongList();
-    }
-
-    enum PlayerState {
-        PLAY, PAUSE
     }
 }

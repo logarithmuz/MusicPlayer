@@ -1,4 +1,4 @@
-package de.elite.musicplayer;
+package de.elite.musicplayer.model;
 
 import android.net.Uri;
 

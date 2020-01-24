@@ -1,7 +1,6 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.main.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;

@@ -1,4 +1,4 @@
-package de.elite.musicplayer;
+package de.elite.musicplayer.controller.ui.helper.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import de.elite.musicplayer.ui.main.QueueFragment;
+import de.elite.musicplayer.R;
+import de.elite.musicplayer.model.Song;
+import de.elite.musicplayer.controller.ui.main.fragments.QueueFragment;
 
 public class QueueFragmentRecyclerViewAdapter extends RecyclerView.Adapter<QueueFragmentRecyclerViewAdapter.ViewHolder>{
 

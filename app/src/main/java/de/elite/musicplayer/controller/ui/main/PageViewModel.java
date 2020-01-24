@@ -1,4 +1,4 @@
-package de.elite.musicplayer.ui.main;
+package de.elite.musicplayer.controller.ui.main;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

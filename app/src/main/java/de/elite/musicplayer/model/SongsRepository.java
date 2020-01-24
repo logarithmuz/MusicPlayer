@@ -1,4 +1,4 @@
-package de.elite.musicplayer;
+package de.elite.musicplayer.model;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -9,6 +9,8 @@ import android.provider.MediaStore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.elite.musicplayer.controller.MusicPlayerApplication;
 
 
 public class SongsRepository {
