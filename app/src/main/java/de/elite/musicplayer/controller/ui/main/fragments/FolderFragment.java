@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import de.elite.musicplayer.model.MusicPlayer;
  */
 public class FolderFragment extends Fragment {
 
+    private String TAG = "FolderFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount;
 
@@ -89,6 +91,9 @@ public class FolderFragment extends Fragment {
             recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
                 @Override
                 public void onFragmentInteraction(Song song) {
+                    Log.d(TAG, "selected song position: " + songList.indexOf(song));
+                    Log.d(TAG, "selected song: " + song.getArtist() + " - " + song.getTitle());
+
                     musicPlayer.createQueueFromSelectionAndPlay(getContext(), songList, songList.indexOf(song));
                 }
             }));

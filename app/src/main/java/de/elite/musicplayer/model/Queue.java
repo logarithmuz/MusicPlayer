@@ -45,13 +45,16 @@ public class Queue {
         return songList.get(currentSong);
     }
 
-    public Song playSongAtPosition(int position) {
+    public Song selectSongAtPosition(int position) {
+        this.currentSong = position;
+        Log.d(TAG, "selected song position: " + currentSong);
+        Log.d(TAG, "selected song: " + getCurrentSong().getArtist() + " - " + getCurrentSong().getTitle());
+
         if (position < 0 || position >= songList.size()) {
             Log.d(TAG, "Invalid position in Queue selected: " + position +
                     ". Available Positions are between 0 and " + (songList.size() - 1));
             return null;
         }
-        currentSong = position;
         return songList.get(currentSong);
     }
 

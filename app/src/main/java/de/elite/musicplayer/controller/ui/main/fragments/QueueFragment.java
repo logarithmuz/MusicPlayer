@@ -109,6 +109,9 @@ public class QueueFragment extends Fragment {
             recyclerView.setAdapter(new QueueFragmentRecyclerViewAdapter(queueSongList, new OnListFragmentInteractionListener() {
                 @Override
                 public void onFragmentInteraction(Song song) {
+                    Log.d(TAG, "selected song position: " + queueSongList.indexOf(song));
+                    Log.d(TAG, "selected song: " + song.getArtist() + " - " + song.getTitle());
+
                     musicPlayer.playSongAtPositionInQueue(getContext(), queueSongList.indexOf(song));
                 }
             }));
