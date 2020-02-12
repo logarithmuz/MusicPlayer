@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -29,6 +28,7 @@ import javax.inject.Inject;
 
 import de.elite.musicplayer.controller.Constant;
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.controller.ui.helper.threads.UpdateSeekBarThread;
 import de.elite.musicplayer.model.Song;
 import de.elite.musicplayer.model.MusicPlayer;
 import de.elite.musicplayer.model.enums.PlayerState;
@@ -48,6 +48,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Inject
     MusicPlayer musicPlayer = MusicPlayer.getInstance();
     private String TAG = "PlayerFragment";
+    private PlayerState playerState;
+    private UpdateSeekBarThread updateSeekBarThread;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -85,23 +87,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         playerStateObservable.subscribe(new Observer<PlayerState>() {
             @Override
             public void onSubscribe(Disposable d) {
-                Log.d(TAG, "onSubscribe: called");
+                Log.d(TAG, "playerStateObservable/onSubscribe: called");
             }
 
             @Override
             public void onNext(PlayerState playerState) {
-                Log.d(TAG, "onNext: " + playerState);
+                Log.d(TAG, "playerStateObservable/onNext: " + playerState);
                 refreshPlayerState(playerState);
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, "onError: ", e);
+                Log.e(TAG, "playerStateObservable/onError: ", e);
             }
 
             @Override
             public void onComplete() {
-                Log.d(TAG, "onComplete: called");
+                Log.d(TAG, "playerStateObservable/onComplete: called");
             }
         });
 
@@ -112,23 +114,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         currentSongObservable.subscribe(new Observer<Song>() {
             @Override
             public void onSubscribe(Disposable d) {
-                Log.d(TAG, "onSubscribe: called");
+                Log.d(TAG, "currentSongObservable/onSubscribe: called");
             }
 
             @Override
             public void onNext(Song song) {
-                Log.d(TAG, "onNext: " + song.toString());
+                Log.d(TAG, "currentSongObservable/onNext: " + song.toString());
                 refreshSongInfo(song);
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, "onError: ", e);
+                Log.e(TAG, "currentSongObservable/onError: ", e);
             }
 
             @Override
             public void onComplete() {
-                Log.d(TAG, "onComplete: called");
+                Log.d(TAG, "currentSongObservable/onComplete: called");
             }
         });
     }
@@ -160,6 +162,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void refreshPlayerState(PlayerState playerState) {
+        this.playerState = playerState;
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.btn_play_pause);
         if (playerState == PlayerState.PLAY) {
             imageView.setImageResource(R.drawable.ic_pause);
@@ -167,9 +170,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         if (playerState == PlayerState.PAUSE) {
             imageView.setImageResource(R.drawable.ic_play);
         }
+        if (playerState == PlayerState.STOP) {
+            if (this.updateSeekBarThread != null) {
+                this.updateSeekBarThread.stopThread();
+            }
+        }
     }
 
     private void refreshSongInfo(final Song song) {
+        Log.d(TAG, "refreshSongInfo() called");
         try {
             ImageView albumCover = getActivity().findViewById(R.id.album_cover);
             TextView tfTitle = getActivity().findViewById(R.id.tf_title);
@@ -210,20 +219,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 }
             });
 
-            Thread updateSeekBarThread = new Thread() {
-                @Override
-                public void run() {
-                    while (musicPlayer.getCurrentPositionInSong() < song.getDuration()) {
-                        refreshSeekBar(musicPlayer.getCurrentPositionInSong());
-                        refreshSeekBarSeconds(musicPlayer.getCurrentPositionInSong());
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            };
+            updateSeekBarThread = new UpdateSeekBarThread(musicPlayer, song, this);
             updateSeekBarThread.start();
 
         } catch (FileNotFoundException e) {
@@ -231,7 +227,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void refreshSeekBarSeconds(final int millis) {
+    public void refreshSeekBarSeconds(final int millis) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -242,7 +238,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void refreshSeekBar(int millis) {
+    public void refreshSeekBar(int millis) {
         SeekBar seekBar = getActivity().findViewById(R.id.seekBar);
         if (seekBar != null)
             seekBar.setProgress(millis);
