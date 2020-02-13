@@ -13,18 +13,18 @@ public class DirectoryTree {
 
     private String path;
     private String[] pathElements;
-    private Map<String, DirectoryTree> directoryChildren;
+    private Map<String, DirectoryTree> subdirectories;
     private List<Song> songs;
 
     public DirectoryTree(String path) {
         this.path = path;
         this.pathElements = path.split("/");
-        this.directoryChildren = new HashMap<>();
+        this.subdirectories = new HashMap<>();
         this.songs = new ArrayList<>();
     }
 
-    public Map<String, DirectoryTree> getDirectoryChildren() {
-        return directoryChildren;
+    public Map<String, DirectoryTree> getSubdirectories() {
+        return subdirectories;
     }
 
     public List<Song> getSongs() {
@@ -43,15 +43,15 @@ public class DirectoryTree {
         final int SONG_NAME = 1;
         if (songPathElements.length - SONG_NAME > pathElements.length) {
             String subdirectoryPath = this.path + "/" + songPathElements[pathElements.length];
-            if (!this.directoryChildren.containsKey(subdirectoryPath)) {
+            if (!this.subdirectories.containsKey(subdirectoryPath)) {
                 Log.d(TAG, "create subdirectory '" + subdirectoryPath + "' for '" + songPath + "'");
                 addSubdirectory(subdirectoryPath);
             }
-            this.directoryChildren.get(subdirectoryPath).addSong(song);
+            this.subdirectories.get(subdirectoryPath).addSong(song);
         }
     }
 
     private void addSubdirectory(String path) {
-        this.directoryChildren.put(path, new DirectoryTree(path));
+        this.subdirectories.put(path, new DirectoryTree(path));
     }
 }
