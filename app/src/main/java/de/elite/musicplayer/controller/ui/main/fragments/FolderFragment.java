@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import de.elite.musicplayer.controller.ui.helper.adapter.FolderFragmentRecyclerViewAdapter;
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.model.DirectoryTree;
 import de.elite.musicplayer.model.Song;
 import de.elite.musicplayer.model.SongsRepository;
 import de.elite.musicplayer.model.MusicPlayer;
@@ -81,20 +82,28 @@ public class FolderFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            final List<Song> songList = songsRepository.getAllSongs();
+            final DirectoryTree directoryTree = songsRepository.getDirectoryTreeRoot();
+            final List<Song> songList = directoryTree.getSongs();
+            final List<DirectoryTree> subdirectoryList = directoryTree.getOrderedListOfSubdirectories();
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(songList, new OnListFragmentInteractionListener() {
+            recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(directoryTree, new OnListFragmentInteractionListener() {
                 @Override
-                public void onFragmentInteraction(Song song) {
+                public void onSongInteraction(Song song) {
                     Log.d(TAG, "selected song position: " + songList.indexOf(song));
                     Log.d(TAG, "selected song: " + song.getArtist() + " - " + song.getTitle());
 
                     musicPlayer.createQueueFromSelectionAndPlay(getContext(), songList, songList.indexOf(song));
+                }
+
+                @Override
+                public void onSubdirectoryInteraction(DirectoryTree subdirectoryItem) {
+                    Log.d(TAG, "selected subdirectory position: " + subdirectoryList.indexOf(subdirectoryItem));
+                    Log.d(TAG, "selected subdirectory: " + subdirectoryItem.getName() + " at " + subdirectoryItem.getPath());
                 }
             }));
         }
@@ -128,6 +137,7 @@ public class FolderFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onFragmentInteraction(Song item);
+        void onSongInteraction(Song songItem);
+        void onSubdirectoryInteraction(DirectoryTree subdirectoryItem);
     }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DirectoryTree {
 
@@ -23,8 +24,15 @@ public class DirectoryTree {
         this.songs = new ArrayList<>();
     }
 
-    public Map<String, DirectoryTree> getSubdirectories() {
-        return subdirectories;
+    public DirectoryTree getSubdirectorie(String path) {
+        return subdirectories.get(path);
+    }
+
+    public List<DirectoryTree> getOrderedListOfSubdirectories() {
+        List<DirectoryTree> directoryTreeList = subdirectories.values().stream()
+                .sorted((o1, o2) -> o1.path.compareTo(o2.path))
+                .collect(Collectors.toList());
+        return directoryTreeList;
     }
 
     public List<Song> getSongs() {
@@ -53,5 +61,13 @@ public class DirectoryTree {
 
     private void addSubdirectory(String path) {
         this.subdirectories.put(path, new DirectoryTree(path));
+    }
+
+    public String getName() {
+        return pathElements[pathElements.length-1];
+    }
+
+    public String getPath() {
+        return path;
     }
 }
