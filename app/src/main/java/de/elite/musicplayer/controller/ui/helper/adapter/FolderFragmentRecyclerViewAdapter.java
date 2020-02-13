@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import de.elite.musicplayer.R;
+import de.elite.musicplayer.model.DirectoryTree;
 import de.elite.musicplayer.model.Song;
 import de.elite.musicplayer.controller.ui.main.fragments.FolderFragment;
-
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Song} and makes a call to the
@@ -20,12 +21,14 @@ import java.util.List;
  */
 public class FolderFragmentRecyclerViewAdapter extends RecyclerView.Adapter<FolderFragmentRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Song> mValues;
     private final FolderFragment.OnListFragmentInteractionListener mListener;
+    private List<DirectoryTree> subdirectories;
+    private List<Song> songs;
 
-    public FolderFragmentRecyclerViewAdapter(List<Song> songList, FolderFragment.OnListFragmentInteractionListener listener) {
-        mValues = songList;
+    public FolderFragmentRecyclerViewAdapter(DirectoryTree directoryTree, FolderFragment.OnListFragmentInteractionListener listener) {
         mListener = listener;
+        subdirectories = directoryTree.getOrderedListOfSubdirectories();
+        songs = directoryTree.getSongs();
     }
 
     @Override
@@ -37,32 +40,56 @@ public class FolderFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Fold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getTitle());
-        holder.mContentView.setText(mValues.get(position).getArtist());
+        if (position < subdirectories.size()) {
+            DirectoryTree subdirectory = subdirectories.get(position);
+            holder.isDirectory = true;
+            holder.mSubdirectory = subdirectory;
+            holder.mIdView.setText(subdirectory.getName());
+            holder.mContentView.setText(subdirectory.getPath());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onFragmentInteraction(holder.mItem);
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onSubdirectoryInteraction(holder.mSubdirectory);
+                    }
                 }
-            }
-        });
+            });
+        }
+        if (position >= subdirectories.size()) {
+            Song song = songs.get(subdirectories.size() + position);
+            holder.isDirectory = false;
+            holder.mSong = song;
+            holder.mIdView.setText(song.getTitle());
+            holder.mContentView.setText(song.getArtist());
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onSongInteraction(holder.mSong);
+                    }
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return subdirectories.size() + songs.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public Song mItem;
+        public boolean isDirectory;
+        public Song mSong;
+        public DirectoryTree mSubdirectory;
 
         public ViewHolder(View view) {
             super(view);

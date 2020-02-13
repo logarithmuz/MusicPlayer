@@ -25,6 +25,7 @@ public class SongsRepository {
     public static SongsRepository getInstance() {
         if (SongsRepository.instance == null) {
             SongsRepository.instance = new SongsRepository();
+            SongsRepository.instance.getAllSongs();
         }
         return SongsRepository.instance;
     }
@@ -62,5 +63,9 @@ public class SongsRepository {
             } while (songCursor.moveToNext());
         }
         return songList;
+    }
+
+    public DirectoryTree getDirectoryTreeRoot() {
+        return directoryTreeRoot;
     }
 }
