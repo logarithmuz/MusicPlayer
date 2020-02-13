@@ -56,4 +56,8 @@ public class Song {
     public Uri getUri() {
         return songUri;
     }
+
+    public String getPath() {
+        return path;
+    }
 }

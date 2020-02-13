@@ -16,6 +16,8 @@ import de.elite.musicplayer.controller.MusicPlayerApplication;
 public class SongsRepository {
 
     private static SongsRepository instance;
+    private final String rootPath = "/storage/emulated/0/Music";
+    private DirectoryTree directoryTreeRoot;
 
     private SongsRepository() {
     }
@@ -33,6 +35,7 @@ public class SongsRepository {
         ContentResolver contentResolver = context.getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(musicUri, null, null, null, null);
+        this.directoryTreeRoot = new DirectoryTree(rootPath);
 
         if (songCursor != null && songCursor.moveToFirst()) {
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
@@ -52,7 +55,10 @@ public class SongsRepository {
                 Uri songUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         songCursor.getInt(songCursor.getColumnIndex(MediaStore.Audio.AudioColumns._ID)));
 
-                songList.add(new Song(songId, title, artist, album, albumID, duration, path, songUri));
+                Song song = new Song(songId, title, artist, album, albumID, duration, path, songUri);
+                songList.add(song);
+
+                this.directoryTreeRoot.addSong(song);
             } while (songCursor.moveToNext());
         }
         return songList;
