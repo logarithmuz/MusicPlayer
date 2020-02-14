@@ -77,12 +77,15 @@ public class FolderFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_folder, container, false);
+        setAdapter(view, songsRepository.getDirectoryTreeRoot());
 
-        // Set the adapter
+        return view;
+    }
+
+    private void setAdapter(View view, DirectoryTree directoryTree) {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            final DirectoryTree directoryTree = songsRepository.getDirectoryTreeRoot();
             final List<Song> songList = directoryTree.getSongs();
             final List<DirectoryTree> subdirectoryList = directoryTree.getOrderedListOfSubdirectories();
 
@@ -104,11 +107,11 @@ public class FolderFragment extends Fragment {
                 public void onSubdirectoryInteraction(DirectoryTree subdirectoryItem) {
                     Log.d(TAG, "selected subdirectory position: " + subdirectoryList.indexOf(subdirectoryItem));
                     Log.d(TAG, "selected subdirectory: " + subdirectoryItem.getName() + " at " + subdirectoryItem.getPath());
+
+                    setAdapter(view, subdirectoryItem);
                 }
             }));
         }
-
-        return view;
     }
 
     @Override
