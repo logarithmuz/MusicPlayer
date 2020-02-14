@@ -16,12 +16,14 @@ public class DirectoryTree {
     private String[] pathElements;
     private Map<String, DirectoryTree> subdirectories;
     private List<Song> songs;
+    private DirectoryTree parent;
 
-    public DirectoryTree(String path) {
+    public DirectoryTree(String path, DirectoryTree parent) {
         this.path = path;
         this.pathElements = path.split("/");
         this.subdirectories = new HashMap<>();
         this.songs = new ArrayList<>();
+        this.parent = parent;
     }
 
     public DirectoryTree getSubdirectorie(String path) {
@@ -62,7 +64,7 @@ public class DirectoryTree {
     }
 
     private void addSubdirectory(String path) {
-        this.subdirectories.put(path, new DirectoryTree(path));
+        this.subdirectories.put(path, new DirectoryTree(path, this));
     }
 
     public String getName() {
@@ -71,5 +73,9 @@ public class DirectoryTree {
 
     public String getPath() {
         return path;
+    }
+
+    public DirectoryTree getParent() {
+        return parent;
     }
 }

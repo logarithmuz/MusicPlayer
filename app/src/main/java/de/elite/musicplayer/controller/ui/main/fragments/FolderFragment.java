@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -31,11 +32,12 @@ import de.elite.musicplayer.model.MusicPlayer;
  * Use the {@link FolderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FolderFragment extends Fragment {
+public class FolderFragment extends Fragment implements View.OnClickListener {
 
     private String TAG = "FolderFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount;
+    private DirectoryTree currentDirectoryTree;
 
     @Inject
     private SongsRepository songsRepository = SongsRepository.getInstance();
@@ -77,41 +79,42 @@ public class FolderFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_folder, container, false);
-        setAdapter(view, songsRepository.getDirectoryTreeRoot());
+        RecyclerView recyclerView = view.findViewById(R.id.folder_list);
+        setAdapter(recyclerView, songsRepository.getDirectoryTreeRoot());
 
+        ImageView previous = view.findViewById(R.id.folder_back_button);
+        previous.setOnClickListener(this);
         return view;
     }
 
-    private void setAdapter(View view, DirectoryTree directoryTree) {
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            final List<Song> songList = directoryTree.getSongs();
-            final List<DirectoryTree> subdirectoryList = directoryTree.getOrderedListOfSubdirectories();
+    private void setAdapter(RecyclerView recyclerView, DirectoryTree directoryTree) {
+        Context context = recyclerView.getContext();
+        this.currentDirectoryTree = directoryTree;
+        final List<Song> songList = directoryTree.getSongs();
+        final List<DirectoryTree> subdirectoryList = directoryTree.getOrderedListOfSubdirectories();
 
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(directoryTree, new OnListFragmentInteractionListener() {
-                @Override
-                public void onSongInteraction(Song song) {
-                    Log.d(TAG, "selected song position: " + songList.indexOf(song));
-                    Log.d(TAG, "selected song: " + song.getArtist() + " - " + song.getTitle());
-
-                    musicPlayer.createQueueFromSelectionAndPlay(getContext(), songList, songList.indexOf(song));
-                }
-
-                @Override
-                public void onSubdirectoryInteraction(DirectoryTree subdirectoryItem) {
-                    Log.d(TAG, "selected subdirectory position: " + subdirectoryList.indexOf(subdirectoryItem));
-                    Log.d(TAG, "selected subdirectory: " + subdirectoryItem.getName() + " at " + subdirectoryItem.getPath());
-
-                    setAdapter(view, subdirectoryItem);
-                }
-            }));
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        recyclerView.setAdapter(new FolderFragmentRecyclerViewAdapter(directoryTree, new OnListFragmentInteractionListener() {
+            @Override
+            public void onSongInteraction(Song song) {
+                Log.d(TAG, "selected song position: " + songList.indexOf(song));
+                Log.d(TAG, "selected song: " + song.getArtist() + " - " + song.getTitle());
+
+                musicPlayer.createQueueFromSelectionAndPlay(getContext(), songList, songList.indexOf(song));
+            }
+
+            @Override
+            public void onSubdirectoryInteraction(DirectoryTree subdirectoryItem) {
+                Log.d(TAG, "selected subdirectory position: " + subdirectoryList.indexOf(subdirectoryItem));
+                Log.d(TAG, "selected subdirectory: " + subdirectoryItem.getName() + " at " + subdirectoryItem.getPath());
+
+                setAdapter(recyclerView, subdirectoryItem);
+            }
+        }));
     }
 
     @Override
@@ -129,6 +132,27 @@ public class FolderFragment extends Fragment {
         super.onDetach();
     }
 
+    private void openParentFolder(View v) {
+        DirectoryTree parent = currentDirectoryTree.getParent();
+        if (parent == null) {
+            return;
+        }
+        RecyclerView recyclerView = getView().findViewById(R.id.folder_list);
+        setAdapter(recyclerView, parent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.folder_back_button:
+                openParentFolder(v);
+                break;
+            default:
+                throw new UnsupportedOperationException("No onClick action defined for " + v.getId());
+        }
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -141,6 +165,7 @@ public class FolderFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         void onSongInteraction(Song songItem);
+
         void onSubdirectoryInteraction(DirectoryTree subdirectoryItem);
     }
 }
