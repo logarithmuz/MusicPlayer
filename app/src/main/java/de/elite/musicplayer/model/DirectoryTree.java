@@ -56,6 +56,8 @@ public class DirectoryTree {
                 addSubdirectory(subdirectoryPath);
             }
             this.subdirectories.get(subdirectoryPath).addSong(song);
+        } else {
+            this.songs.add(song);
         }
     }
 
