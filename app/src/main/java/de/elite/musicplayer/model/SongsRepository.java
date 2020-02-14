@@ -36,7 +36,7 @@ public class SongsRepository {
         ContentResolver contentResolver = context.getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(musicUri, null, null, null, null);
-        this.directoryTreeRoot = new DirectoryTree(rootPath);
+        this.directoryTreeRoot = new DirectoryTree(rootPath, null);
 
         if (songCursor != null && songCursor.moveToFirst()) {
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
